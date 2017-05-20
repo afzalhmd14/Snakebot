@@ -4,9 +4,15 @@ import random as r
 
 TRI = np.array([[-16,-16],[16,-16],[0,32]],np.float32)
 
+def makeBorder(img):
+    cv2.rectangle(img,(2,2),(1535,15),254,-1)
+    cv2.rectangle(img,(2,704),(1535,717),254,-1)
+    cv2.rectangle(img,(2,19),(15,701),254,-1)
+    cv2.rectangle(img,(1522,19),(1535,701),254,-1)
+
 def makeObst(img):
-    cx = r.randint(270,1450)
-    cy = r.randint(70,650)
+    cx = r.randint(270,1300)
+    cy = r.randint(100,550)
     offset = np.array([[cx,cy],[cx,cy],[cx,cy]],np.float32)
     color = (r.randint(10,254),r.randint(10,254),r.randint(10,254))
     for i in range (0,50):
@@ -26,18 +32,17 @@ def processMap(img):
     kernel = np.ones((15,15),np.uint8)
     mask = cv2.inRange(img,np.array([2,2,2]),np.array([255,255,255]))
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+    makeBorder(mask)
     _, contours, hierarchy = cv2.findContours(mask.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     mask.astype(np.uint8)
     for cnt in contours:
         hull = cv2.convexHull(cnt)
         cv2.fillConvexPoly(mask,hull,(255,255,255))
-    mask = cv2.copyMakeBorder(mask,3,3,3,3,cv2.BORDER_CONSTANT,value = WHITE)
-    img = cv2.copyMakeBorder(img,3,3,3,3,cv2.BORDER_CONSTANT,value = WHITE)
     _, sure_fg = cv2.threshold(mask,127,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     _, markers = cv2.connectedComponents(np.uint8(sure_fg))
-    print(markers[10][10])
     markers = cv2.watershed(img,markers)
-    mask[markers == -1] = [255]
+    mask[markers == -1] = [155]
+    mask = mask[20:699,16:1520]
     return mask
 
 img = np.zeros((720,1800,3),np.uint8)
