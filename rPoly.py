@@ -5,14 +5,14 @@ import random as r
 TRI = np.array([[-16,-16],[16,-16],[0,32]],np.float32)
 
 def makeBorder(img):
-    cv2.rectangle(img,(2,2),(1535,15),254,-1)
-    cv2.rectangle(img,(2,704),(1535,717),254,-1)
-    cv2.rectangle(img,(2,19),(15,701),254,-1)
-    cv2.rectangle(img,(1522,19),(1535,701),254,-1)
+    cv2.rectangle(img,(2,2),(1535,7),254,-1)
+    cv2.rectangle(img,(2,712),(1535,717),254,-1)
+    cv2.rectangle(img,(2,11),(7,708),254,-1)
+    cv2.rectangle(img,(1530,11),(1535,708),254,-1)
 
 def makeObst(img):
     cx = r.randint(270,1300)
-    cy = r.randint(100,550)
+    cy = r.randint(140,550)
     offset = np.array([[cx,cy],[cx,cy],[cx,cy]],np.float32)
     color = (r.randint(10,254),r.randint(10,254),r.randint(10,254))
     for i in range (0,50):
@@ -41,17 +41,26 @@ def processMap(img):
     _, sure_fg = cv2.threshold(mask,127,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     _, markers = cv2.connectedComponents(np.uint8(sure_fg))
     markers = cv2.watershed(img,markers)
-    mask[markers == -1] = [155]
-    mask = mask[20:699,16:1520]
-    return mask
+    paths = mask.copy()
+    paths[markers == -1] = [155]
+    dt = cv2.distanceTransform(cv2.bitwise_not(mask),cv2.DIST_L2,5)
+    _,dt = cv2.threshold(dt,0.1*dt.max(),255,0)
+    dt = np.uint8(dt)
+    feasiblePaths = cv2.bitwise_and(paths, dt)
+    return mask,paths,feasiblePaths
 
-img = np.zeros((720,1800,3),np.uint8)
+img = np.zeros((720,1537,3),np.uint8)
 
 for i in range (0,r.randint(9,11)):
     makeObst(img)
 
+mask,paths,feasiblePaths = processMap(img)
 
-mask = processMap(img)
-cv2.imshow("mask",mask)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+cv2.imshow("Map",mask)
+cv2.waitKey()
+cv2.destroyAllWindows
+
+cv2.imshow("Paths",paths)
+cv2.imshow("Feasable Paths",feasiblePaths)
+cv2.waitKey()
+cv2.destroyAllWindows
