@@ -141,8 +141,12 @@ class Snake:
     def getNormal(self,p1,p2):
         delta_x = p2[0]-p1[0]
         delta_y = p2[1]-p1[1]
-        delta_x = int(8*(delta_x/hypot(delta_x,delta_y)))
-        delta_y = int(8*(delta_y/hypot(delta_x,delta_y)))
+        try:
+            delta_x = int(8*(delta_x/hypot(delta_x,delta_y)))
+            delta_y = int(8*(delta_y/hypot(delta_x,delta_y)))
+        except:
+            delta_x=0
+            delta_y=0
         return (delta_y,-delta_x)
 
 #######################################################--INITIALIZE--###########################################################################

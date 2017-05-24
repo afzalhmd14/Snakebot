@@ -1,0 +1,39 @@
+<?xml version = "1.0"?>
+<launch>
+
+  <!--  Author: Chaitanya Pb
+
+        This launch file sets up all the information ROS needs to simulate the snake robot in an environment in Gazebo.
+        The environment to be launched is described in snake_gazebo.launch.
+
+        Uses these files to run: snake_control.yaml and snake_gazebo.launch
+
+        Doesn't contain paths to external files.  -->
+
+  <!-- Launch Gazebo  -->
+  <include file="$(find snake_robot)/launch/snake_gazebo.launch" />   
+
+
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find snake_robot)/config/snake_control.yaml" command="load"/>
+
+
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+  output="screen" ns="/snake_robot" args="joint_state_controller
+            b_2_position_controller
+            2_3_position_controller
+            3_4_position_controller
+            4_5_position_controller
+            5_6_position_controller
+            6_7_position_controller
+            7_8_position_controller"/>
+
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+  respawn="false" output="screen">
+    <remap from="/joint_states" to="/snake_robot/joint_states" />
+  </node>
+
+</launch>
