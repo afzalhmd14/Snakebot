@@ -49,18 +49,89 @@ def processMap(img):
     feasiblePaths = cv2.bitwise_and(paths, dt)
     return mask,paths,feasiblePaths
 
+def checkNodality(r,c,img):
+    nodality = 0
+    if not(img.item(r-1,c-1) == 0):
+        nodality = nodality+1
+    if not(img.item(r-1,c) == 0):
+        nodality = nodality+1
+    if not(img.item(r-1,c+1) == 0):
+        nodality = nodality+1
+    if not(img.item(r,c-1) == 0):
+        nodality = nodality+1
+    if not(img.item(r,c+1) == 0):
+        nodality = nodality+1
+    if not(img.item(r+1,c-1) == 0):
+        nodality = nodality+1
+    if not(img.item(r+1,c) == 0):
+        nodality = nodality+1
+    if not(img.item(r+1,c+1) == 0):
+        nodality = nodality+1
+    return nodality
+
+def findNeighbor(r,c,img):
+    if not(img.item(r-1,c-1) == 0):
+        return (c-1,r-1)
+    if not(img.item(r-1,c) == 0):
+        return (c,r-1)
+    if not(img.item(r-1,c+1) == 0):
+        return (c+1,r-1)
+    if not(img.item(r,c-1) == 0):
+        return (c-1,r)
+    if not(img.item(r,c+1) == 0):
+        return (c+1,r)
+    if not(img[r+1][c-1] == 0):
+        return (c-1,r+1)
+    if not(img.item(r+1,c) == 0):
+        return (c,r+1)
+    if not(img.item(r+1,c+1) == 0):
+        return (c+1,r+1)
+    else:
+        return (c,r)
+
+def removeDeadEnds(img,deadEnds):
+    for (c,r) in deadEnds:
+        while True:
+            nodality = checkNodality(r,c,img)
+            if (img.item(r,c)==0):
+                break
+            if (nodality==2):
+                cn,rn = findNeighbor(r,c,img)
+                if not(checkNodality(rn,cn,img)==3):
+                    break
+            img.itemset((r,c),0)
+            c,r = findNeighbor(r,c,img)
+
+def findNodes(img):
+    nodes = []
+    deadEnds = []
+    for r in range (1,719):
+        for c in range (1,1536):
+            if not(img[r][c]==0):
+                nodality = checkNodality(r,c,img)
+                if nodality<=1:
+                    deadEnds.append((c,r))
+                if nodality>=3:
+                    flag =1
+                    for n in nodes:
+                        if (((c-n[0])**2+(r-n[1])**2)<10):
+                            flag = 0
+                            break
+                    if flag:
+                        nodes.append((c,r))
+    return nodes,deadEnds
+
 img = np.zeros((720,1537,3),np.uint8)
 
 for i in range (0,r.randint(9,11)):
     makeObst(img)
 
 mask,paths,feasiblePaths = processMap(img)
-
-cv2.imshow("Map",mask)
-cv2.waitKey()
-cv2.destroyAllWindows
-
-cv2.imshow("Paths",paths)
+nodes,deadEnds = findNodes(feasiblePaths)
+clearPaths = feasiblePaths.copy()
+removeDeadEnds(clearPaths,deadEnds)
 cv2.imshow("Feasable Paths",feasiblePaths)
 cv2.waitKey()
-cv2.destroyAllWindows
+cv2.imshow("Clear Paths",clearPaths)
+cv2.waitKey()
+cv2.destroyAllWindows()
