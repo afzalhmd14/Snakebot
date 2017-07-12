@@ -1,0 +1,115 @@
+<?xml version = "1.0"?>
+<robot xmlns:xacro = "http://www.ros.org/wiki/xacro">
+
+  <!--  Author: Chaitanya Pb
+
+        This XML file contains the elements Gazebo needs to simulate one module of the snake robot.
+
+        Should be run only from inside snake_module.xacro
+
+        Doesn't contain paths to external files.  -->
+
+	<gazebo reference = "${prefix}base_link">
+		<material>Gazebo/ZincYellow</material>
+	</gazebo>
+
+	<gazebo reference = "${prefix}base_bar1">
+		<material>Gazebo/ZincYellow</material>
+	</gazebo>
+
+	<gazebo reference = "${prefix}base_bar2">
+		<material>Gazebo/ZincYellow</material>
+	</gazebo>
+
+	<gazebo reference = "${prefix}step_link">
+		<material>Gazebo/ZincYellow</material>
+  	</gazebo>
+
+	<gazebo reference = "${prefix}step_bar1">
+		<material>Gazebo/ZincYellow</material>
+	</gazebo>
+
+	<gazebo reference = "${prefix}step_bar2">
+		<material>Gazebo/ZincYellow</material>
+	</gazebo>
+
+	<gazebo reference = "${prefix}ceil_link">
+		<material>Gazebo/ZincYellow</material>
+	</gazebo>
+
+	<gazebo reference = "${prefix}wheel_axel">
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
+
+	<gazebo reference = "${prefix}wheel">
+		<material>Gazebo/White</material>
+		<mu1>0.2</mu1>
+		<mu2>0.2</mu2>
+		<fdir1>0 0 1</fdir1>
+	</gazebo>
+
+	<gazebo reference = "${prefix}servo_motor">
+		<material>Gazebo/FlatBlack</material>
+	</gazebo>
+
+  <!-- sonar description -->
+  <gazebo reference="${prefix}sonar_left">
+    <material>Gazebo/Blue</material>
+    <turnGravityOff>false</turnGravityOff>
+    <sensor type="ray" name="${prefix}sonar_l">
+        <pose>${length/6} 0 0 0 0 0</pose>
+        <visualize>true</visualize>
+        <update_rate>1000</update_rate>
+        <ray>
+          <scan>
+              <horizontal>
+                <samples>20</samples>
+                <resolution>1</resolution>
+                <min_angle>-0.05</min_angle>
+                <max_angle>0.05</max_angle>
+              </horizontal>
+          </scan>
+          <range>
+              <min>0.10</min>
+              <max>10.0</max>
+              <resolution>0.001</resolution>
+          </range>
+        </ray>
+        <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+          <topicName>/${prefix}sonar_left/scan</topicName>
+          <frameName>${prefix}sonar_left</frameName>
+        </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- sonar description -->
+  <gazebo reference="${prefix}sonar_right">
+    <material>Gazebo/Blue</material>
+    <turnGravityOff>false</turnGravityOff>
+    <sensor type="ray" name="${prefix}sonar_r">
+        <pose>${length/6} 0 0 0 0 0</pose>
+        <visualize>true</visualize>
+        <update_rate>1000</update_rate>
+        <ray>
+          <scan>
+              <horizontal>
+                <samples>20</samples>
+                <resolution>1</resolution>
+                <min_angle>-0.05</min_angle>
+                <max_angle>0.05</max_angle>
+              </horizontal>
+          </scan>
+          <range>
+              <min>0.10</min>
+              <max>10.0</max>
+              <resolution>0.01</resolution>
+          </range>
+        </ray>
+        <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+          <topicName>/${prefix}sonar_right/scan</topicName>
+          <frameName>${prefix}sonar_right</frameName>
+        </plugin>
+    </sensor>
+  </gazebo>
+	
+</robot>
