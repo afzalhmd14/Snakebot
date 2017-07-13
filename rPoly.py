@@ -4,14 +4,15 @@ import random as r
 from collections import defaultdict
 
 TRI = np.array([[-16,-16],[16,-16],[0,32]],np.float32)
-global gPaths
 gPaths = []
 
 def makeBorder(img):
-    cv2.rectangle(img,(2,2),(1535,7),254,-1)
-    cv2.rectangle(img,(2,712),(1535,717),254,-1)
-    cv2.rectangle(img,(2,11),(7,708),254,-1)
-    cv2.rectangle(img,(1530,11),(1535,708),254,-1)
+    res_x = img.shape[1]
+    res_y = img.shape[0]
+    cv2.rectangle(img,(2,2),(res_x-3,7),254,-1)
+    cv2.rectangle(img,(2,res_y-8),(res_x-2,res_y-3),254,-1)
+    cv2.rectangle(img,(2,11),(7,res_y-12),254,-1)
+    cv2.rectangle(img,(res_x-8,11),(res_x-3,res_y-12),254,-1)
 
 def makeObst(img):
     cx = r.randint(270,1300)
@@ -31,9 +32,8 @@ def makeObst(img):
         cv2.fillPoly(img,new,color)
 
 def processMap(img):
-    WHITE = [254,254,254]
     kernel = np.ones((15,15),np.uint8)
-    mask = cv2.inRange(img,np.array([2,2,2]),np.array([255,255,255]))
+    mask = cv2.inRange(img,np.array([150,150,150]),np.array([255,255,255]))
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     makeBorder(mask)
     _, contours, hierarchy = cv2.findContours(mask.copy(),cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
@@ -41,6 +41,7 @@ def processMap(img):
     for cnt in contours:
         hull = cv2.convexHull(cnt)
         cv2.fillConvexPoly(mask,hull,(255,255,255))
+
     _, sure_fg = cv2.threshold(mask,127,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     _, markers = cv2.connectedComponents(np.uint8(sure_fg))
     markers = cv2.watershed(img,markers)
@@ -96,13 +97,13 @@ def removeDeadEnds(img,deadEnds):
                     break
             img.itemset((r,c),0)
             neighbors = findNeighbors(r,c,img)
-            c,r = neighbors[0] 
+            c,r = neighbors[0]
 
 def findNodes(img):
     nodes = []
     deadEnds = []
-    for r in range (1,719):
-        for c in range (1,1536):
+    for r in range (1,img.shape[0]):
+        for c in range (1,img.shape[1]):
             if not(img[r][c]==0):
                 nodality = len(findNeighbors(r,c,img))
                 if nodality<=1:
@@ -121,7 +122,7 @@ def dist2(p):
 def processNodes(img,nodes):
     adjacency = []
     paths = []
-    img,contours,_ = cv2.findContours(img,cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)    
+    img,contours,_ = cv2.findContours(img,cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     cnt = contours[0]
     cnt = sorted(cnt,key=dist)
     start = tuple(cnt[0][0])
@@ -156,7 +157,7 @@ def processNodes(img,nodes):
         adjacency.extend(lAdjacency)
         paths.extend(lPaths)
     nodePaths = paths
-    adjacency,nodePaths = removeDuplicates(adjacency,nodePaths)    
+    adjacency,nodePaths = removeDuplicates(adjacency,nodePaths)
     lAdjacency = []
     for a in adjacency:
         lAdjacency.append([a[1],a[0]])
@@ -233,30 +234,57 @@ def getCurPath(p,nodePaths):
     print ("Yo code is a sux")
     return None
 
-
-obstMap = np.zeros((720,1537,3),np.uint8)
-for i in range (0,r.randint(9,11)):
-    makeObst(obstMap)
-mask,paths,feasiblePaths = processMap(obstMap)
-nodes, deadEnds = findNodes(feasiblePaths)
-clearPaths = feasiblePaths.copy()
-removeDeadEnds(clearPaths,deadEnds)
-nodes,_ = findNodes(clearPaths)
-adjacencyList,nodePaths,nodes = processNodes(clearPaths,nodes)
-visited={}
-for x in adjacencyList.keys():
-    visited[x] = False
-findNodePaths(adjacencyList,nodes[0],nodes[len(nodes)-1],visited,[])
-gPaths = list(set(gPaths))
-clearPaths = cv2.bitwise_or(clearPaths,mask)
-for path in gPaths:
-    new=clearPaths.copy()
-    print("Path: ",path)
-    for i in range(1,len(path)):
-        pair = [path[i-1],path[i]]
-        nodePath = getCurPath(pair,nodePaths)
-        for pt in nodePath:
-            cv2.circle(new,(pt[0],pt[1]),3,120,-1)
-    cv2.imshow("nwe",new)
-    cv2.waitKey()
+def rPoly(img):
+    global gPaths
+    mask,paths,feasiblePaths = processMap(img)
+    nodes, deadEnds = findNodes(feasiblePaths)
+    clearPaths = feasiblePaths.copy()
+    removeDeadEnds(clearPaths,deadEnds)
+    nodes,_ = findNodes(clearPaths)
+    adjacencyList,nodePaths,nodes = processNodes(clearPaths,nodes)
+    visited={}
+    for x in adjacencyList.keys():
+        visited[x] = False
+    findNodePaths(adjacencyList,nodes[0],nodes[len(nodes)-1],visited,[])
+    gPaths = list(set(gPaths))
+    clearPaths = cv2.bitwise_or(clearPaths,mask)
+    for path in gPaths:
+        new=clearPaths.copy()
+        print("Path: ",path)
+        for i in range(1,len(path)):
+            pair = [path[i-1],path[i]]
+            nodePath = getCurPath(pair,nodePaths)
+            for pt in nodePath:
+                cv2.circle(new,(pt[0],pt[1]),3,120,-1)
+        cv2.imshow("new",new)
+        cv2.waitKey()
     cv2.destroyAllWindows()
+    return gPaths
+
+
+# obstMap = np.zeros((720,1537,3),np.uint8)
+# for i in range (0,r.randint(9,11)):
+#     makeObst(obstMap)
+# mask,paths,feasiblePaths = processMap(obstMap)
+# nodes, deadEnds = findNodes(feasiblePaths)
+# clearPaths = feasiblePaths.copy()
+# removeDeadEnds(clearPaths,deadEnds)
+# nodes,_ = findNodes(clearPaths)
+# adjacencyList,nodePaths,nodes = processNodes(clearPaths,nodes)
+# visited={}
+# for x in adjacencyList.keys():
+#     visited[x] = False
+# findNodePaths(adjacencyList,nodes[0],nodes[len(nodes)-1],visited,[])
+# gPaths = list(set(gPaths))
+# clearPaths = cv2.bitwise_or(clearPaths,mask)
+# for path in gPaths:
+#     new=clearPaths.copy()
+#     print("Path: ",path)
+#     for i in range(1,len(path)):
+#         pair = [path[i-1],path[i]]
+#         nodePath = getCurPath(pair,nodePaths)
+#         for pt in nodePath:
+#             cv2.circle(new,(pt[0],pt[1]),3,120,-1)
+#     cv2.imshow("nwe",new)
+#     cv2.waitKey()
+# cv2.destroyAllWindows()
