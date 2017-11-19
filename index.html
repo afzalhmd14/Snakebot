@@ -5,13 +5,13 @@
 			p{display: inline-block;}
 			img{display: block;}
 			.container{width: 90%;position absolute;margin: auto;}
-			.title{position: relative;width: 90%;margin: auto;text-align: center;font-weight: bold;font-size: 24px;padding: 1%;}
+			.title{position: relative;width: 90%;margin: auto;text-align: center;font-weight: bold;font-size: 28px;padding: 1%;}
 			.section{position: relative;width: 90%;margin: auto;padding: 2%;}
 			.subsection{position: relative; width: 98%;text-align: justify;padding: 10px;}
-			.heading{position: relative; width: 98%;text-align: left;font-size: 18px;font-weight: bold;}
-			.text{width: 95%;font-size: 15px;text-align: justify;padding: 10px 0px 10px 0px;}
+			.heading{position: relative; width: 98%;text-align: left;font-size: 19px;font-weight: bold;}
+			.text{width: 95%;font-size: 16px;text-align: justify;padding: 10px 0px 10px 0px;}
 			.authors{position: relative;width: 80%;margin: auto;padding: 2%;font-style: italic;text-align: center;font-size: 12px;}
-			.image{width: 95%;font-size: 15px;text-align: left;}
+			.image{width: 95%;font-size: 15px;text-align: left;padding: 10px;}
 		</style>
 	</head>
 	<body>
@@ -79,24 +79,24 @@
 					<div class="text">
 
 						<!-- Start edit here  -->
-						We have reviewed several approaches used for localisation and navigation of bio-inspired robots. The notable ones being-<br>
+						We have reviewed several approaches used for localisation and navigation of bio-inspired robots. The notable ones being-<br><br>
 						[1] Mark Pfeiffer, Michael Schaeuble, Juan Nieto, Roland Siegwart, Cesar Cadena, "From Perception to Decision: A Data-driven Approach to End-to-end Motion Planning for Autonomous Ground Robots", https://arxiv.org/abs/1609.07910v1
-						<br>
+						<br><br>
 						
 This paper describes the use of a CNN based technique to learn obstacle aoidance for a simple 2-wheeled robot. It compares several methods used for autnomous navigation. It also reviews the use of CNN's and auto-encoders to solve the problem of obstacle avoidance.
-						<br>
+						<br><br>
 [2] Sromona Chatterjee , Timo Nachstedt , Florentin Wörgötter , Minija Tamosiunaite ,Poramate Manoonpong  , Yoshihide Enomoto  , Ryo Ariizumi and Fumitoshi Matsuno, "Reinforcement Learning Approach to generate
 Goal-directed Locomotion of a Snake-Like Robot
 with Screw-Drive Units", Robotics in Alpe-Adria-Danube Region (RAAD), 2014 23rd International Conference
-						<br>
+						<br><br>
 This paper presents a reinforcement learning approach to learn the motion patterns of the snake. It focuses on using the screw and joint angles as control parameters for locomotion. It does not use the pre-defined serpentine control system as the main controller.
-						<br>
+						<br><br>
 						
 [3] Mohammad Dehghani, M. J. Mahjoob, "A Modified Serpenoid Equation for Snake Robots", Proceedings of the 2008 IEEE
 International Conference on Robotics and Biomimetics
-						<br>
+						<br><br>
 This paper is an extension of the original work done by S. Hirose on deriving a mathematical model for serpentine motion of a snake. It describes some modifications on the existing controller in order to make it easier to adapt on real robots. It has been used as the basis for our simulated snake-robot model.
-						<br>
+						<br><br>
 						<!-- Stop edit here -->
 
 					</div>
@@ -151,6 +151,8 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 						<br>
 						<br>
 						We had 59435 samples for each of the above feature. This data was generated using 45 real-time simulations performed in the snake-robot simulator.
+						<img src="Pictures/training-simulation.png" alt="Simulated Design" width="300px" height=""/><br>
+						
 						<!-- Stop edit here -->
 
 					</div>
@@ -162,14 +164,16 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 						<!-- Start edit here  -->
 						The dataset was then divided inot training and testing set (70:30). We have used a scaled version of the entire dataset to prevent errors during training and to ease evaluation. The scaling was done as follows -<br>
 						Sensor values (0,10) --> (0,1)
+						<br>
 						Heading direction (c-value) (-5,5) --> (-1,1)
 						<br>
-						We have used a single-cell LSTM model to train our data. The training results are -<br>
+						We have used a single-cell LSTM model to train our data. The training results are -<br><br>
 						<img src="Pictures/training-loss.png" alt="Simulated Design" width="300px" height=""/><br>
 						Trainig Loss: 0.0019
+						<br>
 						Testing Loss: 0.0025
 						<br>
-						<br>
+						
 						The results suggest that the model has behaved pretty well for this problem.
 						
 						<!-- Stop edit here -->
