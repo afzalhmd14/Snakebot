@@ -141,7 +141,16 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 					<div class="text">
 
 						<!-- Start edit here  -->
-						Write something here.
+						As we are approaching the snake-locomotion problem from a very different angel, we did not have any available dataset. Thus, we designed a simulated snake robot on Vrep (simulation software) to create our own data. We used the modified serpentine controller to control the motion of the robot by manualy tuning the paramters. The set has following division of data - <br>
+						<br>
+						1 head mounted sensor
+						<br>
+						16 side mounted sensors. 8 on the left and 8 on the right.
+						<br>
+						Heading direction value for current motion (c-value)
+						<br>
+						<br>
+						We had 59435 samples for each of the above feature. This data was generated using 45 real-time simulations performed in the snake-robot simulator.
 						<!-- Stop edit here -->
 
 					</div>
@@ -151,7 +160,18 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 					<div class="text">
 
 						<!-- Start edit here  -->
-						Write something here.
+						The dataset was then divided inot training and testing set (70:30). We have used a scaled version of the entire dataset to prevent errors during training and to ease evaluation. The scaling was done as follows -<br>
+						Sensor values (0,10) --> (0,1)
+						Heading direction (c-value) (-5,5) --> (-1,1)
+						<br>
+						We have used a single-cell LSTM model to train our data. The training results are -<br>
+						<img src="Pictures/training-loss.png" alt="Simulated Design" width="300px" height=""/><br>
+						Trainig Loss: 0.0019
+						Testing Loss: 0.0025
+						<br>
+						<br>
+						The results suggest that the model has behaved pretty well for this problem.
+						
 						<!-- Stop edit here -->
 
 					</div>
@@ -165,7 +185,7 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 					<div class="text">
 
 						<!-- Start edit here  -->
-						Write something here.
+						In this work we presented a data-driven approach towards solving a navigation problem for a redundant system. We have successfully shown that it is possible to learn a control strategy by using the surrounding environment as an input. The LSTM based model is able to learn a navigation strategy and use it as control parameter of the serpentine controller.  
 						<!-- Stop edit here -->
 
 					</div>
@@ -175,7 +195,7 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 					<div class="text">
 
 						<!-- Start edit here  -->
-						Write something here.
+						We have observed that even though the model has shown greart predtion accuracy on the test data, it is not able to provide a proper navigation strategy for the simulated snake-robot. Thus. we aim to work further on this problem to correct the robot behaviour and incorporate goal-directed locomotion into the snake-robot. 
 						<!-- Stop edit here -->
 
 					</div>
