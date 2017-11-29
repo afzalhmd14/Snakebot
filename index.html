@@ -111,10 +111,10 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 					<div class="text">
 
 						<!-- Start edit here  -->
-						As a dataset is not currently availbale for this project, it has been manually synthesized. To generate a dataset, we need to model autonomous navigation through an obstacle map and collect the sensor data. To accomplish this, we plan to build a simulation of the snake robot and make it maneuver in an obstacle map. (Detailed expanation of the simulation is described later). <br>
+						As a dataset is not currently availbale for this project, it has been manually synthesized. To generate a dataset, we need to model autonomous navigation through an obstacle map and collect the sensor data. To accomplish this, we plan to build a simulation of the snake robot and make it maneuver in an obstacle map. (Detailed expanation of the simulation is described later). <br><br>
 
 						The collected data, is in the form- <br>
-											[sensor1, sensor2, sensor3, ...., sensor17, heading direction]<br><br>
+						[sensor1, sensor2, sensor3, ...., sensor17, heading direction]<br><br>
 						On this data, we propose to work with three approaches:<br>
 							1. Finding corrlation between sensor data and heading direction using k-means clustering.<br>
 							2. Using ARMA model to predict the heading direction by treating it as a time series.<br>
@@ -144,7 +144,21 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 				<div class="text">
 
 					<!-- Start edit here  -->
-					Write something here.
+					1. Simulation: <br>
+					The simulation was designed in VREP simulation software. In the environment, five to seven obstacles were generated randomly. The top view of the environment is captured and is passed on to a python script that detects all possible paths from the starting point and the ending points. Now the snake moves on each of the paths collecting sensor data at each time instant as it moves.<br><br>
+					//Put image of paths here<br><br>
+
+					Approach 1- K-Means Clustering:<br>
+					The idea is that there might be certain environmental configurations which can be associated to the sensor value n some rudimentary range. For example, one configuration will be when most sensors to the right of the snake and the one at the head detect obstacles nearby, then the snake will turn left. So for configuration similar to this, snake should perform similarly. So we first cluster the sensor data (without heading direction), then perform statistical analysis on the heading direction of all data points within a point to see whether some corellation exists. <br><br>
+
+					Approach 2- ARMA Model:<br>
+					One necessary condition of using ARMA process is that there should be some linear corellation between inputs and outputs. We were hoping that such a corellation might be present. But the corellation heatmap shown below suggests very low linear corellation between the two entities. This implies that using an ARMA model would yeild unhelpful results. So we had to discard in the initial stages itself.<br><br>
+					//Put heatmap image here<br><br>
+
+					Approach 3- LSTM Model:<br>
+					The dataset was then divided into training and testing set (70:30). We have used a scaled version of the entire dataset to prevent errors during training and to ease evaluation. We ued a scaled model of the dataset. The scaling is explained in the discusiion section. Next weused a single-cell LSTM model to train our data.<br><br>
+
+					The results of the two approaches that were viable are explaine in the next section.
 					<!-- Stop edit here -->
 
 				</div>
@@ -179,7 +193,14 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 					<div class="text">
 
 						<!-- Start edit here  -->
-						The dataset was then divided inot training and testing set (70:30). We have used a scaled version of the entire dataset to prevent errors during training and to ease evaluation. The scaling was done as follows -<br><br>
+						Results of K-means: <br>
+						We performed two clusterings with K as 10 and 25. For both clusterings, we did not observe any significant similarity between the heading directions of all the points in a particular clusters. Here are the images of statistical analysis performed on matlab. As you can observe, means are all very closed to zero. So even though variances of heading direction for most clusters is samall, these clustering models will fail to make sharp turnings.<br>
+						It is important to note that we modifies the dataset such that the frequency of occurence of values of heading direction was as uniform as possible so as to not have a skewed dataset.
+
+						//put the two octave screenshots here.<br><br>
+
+						Results of LSTM: <br>
+						The dataset was then divided into training and testing set (70:30). We have used a scaled version of the entire dataset to prevent errors during training and to ease evaluation. The scaling was done as follows -<br><br>
 						Sensor values (0,10) --> (0,1)
 						<br>
 						Heading direction (c-value) (-5,5) --> (-1,1)
