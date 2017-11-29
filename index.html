@@ -111,7 +111,14 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 					<div class="text">
 
 						<!-- Start edit here  -->
-						Describe your approach briefly here.
+						As a dataset is not currently availbale for this project, it has been manually synthesized. To generate a dataset, we need to model autonomous navigation through an obstacle map and collect the sensor data. To accomplish this, we plan to build a simulation of the snake robot and make it maneuver in an obstacle map. (Detailed expanation of the simulation is described later).
+
+						The collected data, is in the form- 
+											[sensor1, sensor2, sensor3, ...., sensor17, heading direction]
+						On this data, we propose to work with three approaches:
+							1. Finding corrlation between sensor data and heading direction using k-means clustering.
+							2. Using ARMA model to predict the heading direction by treating it as a time series.
+							3. Using a deep learing network which has recurrent layers. (We tried applying a simple LSTM in this case)
 						<!-- Stop edit here -->
 
 					</div>
@@ -121,7 +128,11 @@ This paper is an extension of the original work done by S. Hirose on deriving a 
 					<div class="text">
 
 						<!-- Start edit here  -->
-						Write something here.
+						The report is dividied into following subsections:
+							1. Proposed Approach: This explains the the simulatation and each proposed method in detail.
+							2. Dataset Description.
+							3. Results and Conclusions.
+							4. Future Scope of Work and Applicability.
 						<!-- Stop edit here -->
 
 					</div>
