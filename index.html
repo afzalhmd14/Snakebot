@@ -94,7 +94,7 @@
 						This paper presents a modified set of serpenoid equations to navigate snake robots more efficiently. Serpentine gait is recognized as the most efficient gait for snakes in terms of energy, motor torques and friction forces. However, the conventional serpentine model is based on fixed parameters.
 This paper is an extension of the original work done by S. Hirose on deriving a mathematical model for serpentine motion of a snake. It describes some modifications on the existing controller in order to make it easier to adapt on real robots. It has been used as the basis for our simulated snake-robot model.
 						<br><br><br>
-						<a href "http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=6282844">[5] Yasunobu Hitaka, Masahiro Yokomichi, "Obstacle Avoidance of a Snake Robot in Narrow Hallway", Proceedings of 2012 IEEE
+						<a href "http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=6282844">[2] Yasunobu Hitaka, Masahiro Yokomichi, "Obstacle Avoidance of a Snake Robot in Narrow Hallway", Proceedings of 2012 IEEE
 International Conference on Mechatronics and Automation, Chengdu, China </a>
 						<br><br>
 						In this paper, a simple robot model is proposed that uses serpentine motion to move across an obstacle map. They use a serpenoid curve to approximate the serpentine motion. The control parameters of the curve are manually adjusted to fit the motion of the snake. 
@@ -129,11 +129,11 @@ Singapore, 2004 </a>
 						<!-- Start edit here  -->
 						As there was no open source design available for our snake robot, we start our work with designing a simulated snake robot for training and testing our algorithms.We designed our robot using V-rep simulation software. We further tune the simulated robot by changing the design parameters. <br>
 						We also need a global path planner to achieve autonomous navigation in an obstacle map. We use voronoi diagrams to solve this problem. The vornoi approach generates several possible paths through a given map. These are then used by the snake robot to generate data.<br>
-			The data set is described in the following sections. We propose the following approaches to design a predictive model for our robot. <br><br>
+			 We propose the following approaches to design a predictive model for our robot. <br><br>
 
 						
-							1. Finding corrlation between sensor data and control parameters of the serpenoid curve using k-means clustering.<br>
-							2. Using ARMA model to predict the heading direction by treating it as a time series.(signal processing based approach)<br>
+							1. Finding corrlation between sensor data and control parameters of the serpenoid curve using k-means clustering.<br><br>
+							2. Using ARMA model to predict the control parameters by treating it as a time series.(signal processing based approach)<br><br>
 							3. Using a recurrent neural network to predict control parameters (machine learning based approach)
 						<!-- Stop edit here -->
 
@@ -144,11 +144,11 @@ Singapore, 2004 </a>
 					<div class="text">
 
 						<!-- Start edit here  -->
-						The report is dividied into following subsections:<br>
-							1.First, we describe the simulated environemnt and the snake robot design. We aldo describe the control scheme used for the robot.<br>
-							2. This is followed by a brief derciption of autonomous navigation approach using voronoi diagrams.<br>
-							3. It is followed by a description of the generated data. We also descibe our proposed approaches in brief.<br>
-							4. We end our report with showcasing the results and commenting on the future scope improvements.<br>
+						The report is dividied into following subsections:<br><br>
+							1.First, we describe the simulated environemnt and the snake robot design. We also describe the control scheme used for the robot.<br><br>
+							2.This is followed by a brief derciption of autonomous navigation approach using voronoi diagrams.<br><br>
+							3.Then, a brief description of the generated dataset is provided which is followed by the signal processig and machine laerning techniques employed in the project..<br><br>
+							4. Finally, the end results are presented with a short conclusion. We also give a short note on possible future improvements.<br><br>
 						<!-- Stop edit here -->
 
 					</div>
@@ -160,7 +160,7 @@ Singapore, 2004 </a>
 				<div class="text">
 
 					<!-- Start edit here  -->
-					<h1> Designing simulated snake robot:</h1><br>We start our work with designing a simulated snake robot for training and testing our algorithms. As there was no open source design available for our snake robot, we designed one using V-rep simulation software. The design is based upon prior calculations to make it easier to reproduce the teat results on a real snake robot. We have used a modified serpenoid curve [1] to desing the control scheme for the robot. The robot has folowing features-
+					<b> Designing simulated snake robot:</b><br>We start our work with designing a simulated snake robot for training and testing our algorithms.. The design is based upon prior calculations to make it easier to reproduce the teat results on a real snake robot. We have used a modified serpenoid curve [1] to desing the control scheme for the robot. The robot has folowing features-
 						<br>1. 8 subparts joined together by 7 motors. Each motor has a turning angle of 0-180 degrees.
 						<br>2. 17 proximity sensors, 8 on each side of the robot and one on the head.
 						<br>3. 8 wheels, each attached to one subpart. Each wheel is free to rotate about it's axis.<br><br><br>
