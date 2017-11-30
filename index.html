@@ -93,23 +93,23 @@
 						<br><br>
 						This paper presents a modified set of serpenoid equations to navigate snake robots more efficiently. Serpentine gait is recognized as the most efficient gait for snakes in terms of energy, motor torques and friction forces. However, the conventional serpentine model is based on fixed parameters.
 This paper is an extension of the original work done by S. Hirose on deriving a mathematical model for serpentine motion of a snake. It describes some modifications on the existing controller in order to make it easier to adapt on real robots. It has been used as the basis for our simulated snake-robot model.
-						<br>
+						<br><br><br>
 						<a href "http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=6282844">[5] Yasunobu Hitaka, Masahiro Yokomichi, "Obstacle Avoidance of a Snake Robot in Narrow Hallway", Proceedings of 2012 IEEE
 International Conference on Mechatronics and Automation, Chengdu, China </a>
 						<br><br>
 						In this paper, a simple robot model is proposed that uses serpentine motion to move across an obstacle map. They use a serpenoid curve to approximate the serpentine motion. The control parameters of the curve are manually adjusted to fit the motion of the snake. 
-						<br>
+						<br><br><br>
 						<a href "https://arxiv.org/abs/1609.07910">[3] Mark Pfeiffer, Michael Schaeuble, Juan Nieto, Roland Siegwart, Cesar Cadena, "From Perception to Decision: A Data-driven Approach to End-to-end Motion Planning for Autonomous Ground Robots", https://arxiv.org/abs/1609.07910v1</a>
 						<br><br>
 						
 This paper describes the use of a CNN based technique to learn obstacle avoidance and motion planning for a simple 2-wheeled robot. It compares several methods used for autonomous navigation and path planning. It also reviews the use auto-encoders and Deep learning techniques to solve the problem of path planning in robots.
-						<br>
+						<br><br><br>
 <a href "http://ieeexplore.ieee.org/document/7002234/">[4] Sromona Chatterjee , Timo Nachstedt , Florentin Wörgötter , Minija Tamosiunaite ,Poramate Manoonpong  , Yoshihide Enomoto  , Ryo Ariizumi and Fumitoshi Matsuno, "Reinforcement Learning Approach to generate
 Goal-directed Locomotion of a Snake-Like Robot
 with Screw-Drive Units", Robotics in Alpe-Adria-Danube Region (RAAD), 2014 23rd International Conference</a>
 						<br><br>
 This paper presents a reinforcement learning approach to learn the motion patterns of the snake. It focuses on using the screw and joint angles as control parameters for locomotion. It demostrates a Policy Improvement algorithm to learn the complex motion of a snake. It uses a real robot to demostrate the test results.
-						<br>
+						<br><br><br>
 						
 						<a href "http://ieeexplore.ieee.org/abstract/document/1438039/">[5] Shuichi Fukunaga, Yutaka Nakamurat, Kazuaki Aso and Shin Ishii, "Reinforcement learning for a snake-like robot
 controlled by a central pattern generator ", Proceedings ofthe 2004 IEEE
@@ -127,14 +127,14 @@ Singapore, 2004 </a>
 					<div class="text">
 
 						<!-- Start edit here  -->
-						As a dataset is not currently availbale for this project, it has been manually synthesized. To generate a dataset, we need to model autonomous navigation through an obstacle map and collect the sensor data. To accomplish this, we plan to build a simulation of the snake robot and make it maneuver in an obstacle map. (Detailed expanation of the simulation is described later). <br><br>
+						As there was no open source design available for our snake robot, we start our work with designing a simulated snake robot for training and testing our algorithms.We designed our robot using V-rep simulation software. We further tune the simulated robot by changing the design parameters. <br>
+						We also need a global path planner to achieve autonomous navigation in an obstacle map. We use voronoi diagrams to solve this problem. The vornoi approach generates several possible paths through a given map. These are then used by the snake robot to generate data.<br>
+			The data set is described in the following sections. We propose the following approaches to design a predictive model for our robot. <br><br>
 
-						The collected data, is in the form- <br>
-						[sensor1, sensor2, sensor3, ...., sensor17, heading direction]<br><br>
-						On this data, we propose to work with three approaches:<br>
-							1. Finding corrlation between sensor data and heading direction using k-means clustering.<br>
-							2. Using ARMA model to predict the heading direction by treating it as a time series.<br>
-							3. Using a deep learing network which has recurrent layers. (We tried applying a simple LSTM in this case)
+						
+							1. Finding corrlation between sensor data and control parameters of the serpenoid curve using k-means clustering.<br>
+							2. Using ARMA model to predict the heading direction by treating it as a time series.(signal processing based approach)<br>
+							3. Using a recurrent neural network to predict control parameters (machine learning based approach)
 						<!-- Stop edit here -->
 
 					</div>
@@ -145,10 +145,10 @@ Singapore, 2004 </a>
 
 						<!-- Start edit here  -->
 						The report is dividied into following subsections:<br>
-							1. Proposed Approach: This explains the the simulatation and each proposed method in detail.<br>
-							2. Dataset Description.<br>
-							3. Results and Conclusions.<br>
-							4. Future Scope of Work and Applicability.<br>
+							1.First, we describe the simulated environemnt and the snake robot design. We aldo describe the control scheme used for the robot.<br>
+							2. This is followed by a brief derciption of autonomous navigation approach using voronoi diagrams.<br>
+							3. It is followed by a description of the generated data. We also descibe our proposed approaches in brief.<br>
+							4. We end our report with showcasing the results and commenting on the future scope improvements.<br>
 						<!-- Stop edit here -->
 
 					</div>
@@ -160,8 +160,10 @@ Singapore, 2004 </a>
 				<div class="text">
 
 					<!-- Start edit here  -->
-					1. Simulation: <br>
-					The simulation was designed in VREP simulation software. In the environment, five to seven obstacles were generated randomly. The top view of the environment is captured and is passed on to a python script that detects all possible paths from the starting point and the ending points. Now the snake moves on each of the paths collecting sensor data at each time instant as it moves.<br><br>
+					<h1> Designing simulated snake robot:</h1><br>We start our work with designing a simulated snake robot for training and testing our algorithms. As there was no open source design available for our snake robot, we designed one using V-rep simulation software. The design is based upon prior calculations to make it easier to reproduce the teat results on a real snake robot. We have used a modified serpenoid curve [1] to desing the control scheme for the robot. The robot has folowing features-
+						<br>1. 8 subparts joined together by 7 motors. Each motor has a turning angle of 0-180 degrees.
+						<br>2. 17 proximity sensors, 8 on each side of the robot and one on the head.
+						<br>3. 8 wheels, each attached to one subpart. Each wheel is free to rotate about it's axis.<br><br><br>
 					
 					<img src="Pictures/map.PNG" alt="paths" width="500px" height="400px"/>
 					<br><br>
