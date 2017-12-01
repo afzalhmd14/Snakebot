@@ -5,12 +5,12 @@
 			p{display: inline-block;}
 			img{display: block;}
 			.container{width: 90%;position absolute;margin: auto;}
-			.title{position: relative;width: 90%;margin: auto;text-align: center;font-weight: bold;font-size: 28px;padding: 1%;}
+			.title{position: relative;width: 90%;margin: auto;text-align: center;font-weight: bold;font-size: 30px;padding: 1%;}
 			.section{position: relative;width: 90%;margin: auto;padding: 2%;}
 			.subsection{position: relative; width: 98%;text-align: justify;padding: 10px;}
 			.heading{position: relative; width: 98%;text-align: left;font-size: 19px;font-weight: bold;}
 			.text{width: 95%;font-size: 16px;text-align: justify;padding: 10px 0px 10px 0px;}
-			.authors{position: relative;width: 80%;margin: auto;padding: 2%;font-style: italic;text-align: center;font-size: 12px;}
+			.authors{position: relative;width: 80%;margin: auto;padding: 2%;font-style: italic;text-align: center;font-size: 14px;}
 			.image{width: 95%;font-size: 15px;text-align: left;padding: 10px;}
 		</style>
 	</head>
@@ -21,8 +21,9 @@
 			<div class="authors">
 
 				<!-- Start edit here  -->
+				<b>
 				<p>Pentapati Sai Karthikey, Roll No.: 150102083, Branch: ECE</p>; &nbsp; &nbsp;
-				<p>Afzal Ahmad, Roll No.: 150108001, Branch: EEE</p>; &nbsp; &nbsp;
+				<p>Afzal Ahmad, Roll No.: 150108001, Branch: EEE</p>; &nbsp; &nbsp;</b>
 				<!-- Stop edit here -->
 
 			</div>
@@ -34,6 +35,9 @@
 
 					<!-- Start edit here  -->
 					In this project we devise a predictive model to generate parameters for autonomous motion of a snake-like robot. The robot uses serpentine motion to move across an obstacle field. It is equiped with several sensors that act like the sensitive body of a snake. The predctive model relies on this sensor data obtained from the snake and the data from previous motion. We postulate that this data can be used to train a predictive model to generate the control parameters required for the motion of the snake-like robot.
+					<br>
+					<br>
+					<a href "https://github.com/karthikey97/Snakebot">Link to the project codes</a>
 					<!-- Stop edit here -->
 
 				</div>
@@ -72,9 +76,7 @@
 						<td>
 						Block diagram of the proposed solution.
 							<img src="Pictures/blk_diagram.png" alt="Block Diagram" width="500px" height="400px"/></td>
-						<td>
-						Simulated snake robot.
-							<img src="Pictures/design.png" alt="Simulated Design" width="500px" height="400px"/></td>
+						
 						</table>
 						<!-- Stop edit here -->
 
@@ -128,7 +130,7 @@ Singapore, 2004 </a>
 
 						<!-- Start edit here  -->
 						As there was no open source design available for our snake robot, we start our work with designing a simulated snake robot for training and testing our algorithms.We designed our robot using V-rep simulation software. We further tune the simulated robot by changing the design parameters. <br>
-						We also need a global path planner to achieve autonomous navigation in an obstacle map. We use voronoi diagrams to solve this problem. The vornoi approach generates several possible paths through a given map. These are then used by the snake robot to generate data.<br>
+						We also need a global path planner to achieve autonomous navigation in an obstacle map. We use watershed algorithm to solve this problem. The approach is similar to vornoi diagrams that generates several possible paths through a given map. These are then used by the snake robot to generate data.<br><br>
 			 We propose the following approaches to design a predictive model for our robot. <br><br>
 
 						
@@ -146,7 +148,7 @@ Singapore, 2004 </a>
 						<!-- Start edit here  -->
 						The report is dividied into following subsections:<br><br>
 							1.First, we describe the simulated environemnt and the snake robot design. We also describe the control scheme used for the robot.<br><br>
-							2.This is followed by a brief derciption of autonomous navigation approach using voronoi diagrams.<br><br>
+							2.This is followed by a brief derciption of autonomous navigation and path planning approach.<br><br>
 							3.Then, a brief description of the generated dataset is provided which is followed by the signal processig and machine laerning techniques employed in the project..<br><br>
 							4. Finally, the end results are presented with a short conclusion. We also give a short note on possible future improvements.<br><br>
 						<!-- Stop edit here -->
@@ -160,25 +162,73 @@ Singapore, 2004 </a>
 				<div class="text">
 
 					<!-- Start edit here  -->
-					<b> Designing simulated snake robot:</b><br>We start our work with designing a simulated snake robot for training and testing our algorithms.. The design is based upon prior calculations to make it easier to reproduce the teat results on a real snake robot. We have used a modified serpenoid curve [1] to desing the control scheme for the robot. The robot has folowing features-
-						<br>1. 8 subparts joined together by 7 motors. Each motor has a turning angle of 0-180 degrees.
-						<br>2. 17 proximity sensors, 8 on each side of the robot and one on the head.
-						<br>3. 8 wheels, each attached to one subpart. Each wheel is free to rotate about it's axis.<br><br><br>
+					<b> Designing simulated snake robot:</b><br><br>The snake and it's environment is designed on the Virtual Robot Experimentation Platform (V-rep). The design of the robot is based on the available material and components required to make a real robot. This will make it easier to reproduce the test results on a real snake robot. The robot has the folowing features-
+
+						<br><br>1. 8 subsections joined together by 7 motors. Each motor has a turning angle of 0-180 degrees.
+						<br><br>2. 17 proximity sensors, 8 on each side of the robot and one on the head.
+						<br><br>3. 8 wheels, each attached to one subsection. Each wheel is free to rotate about it's axis.<br><br><br>
 					
-					<img src="Pictures/map.PNG" alt="paths" width="500px" height="400px"/>
+					<img src="Pictures/design.png" alt="design" width="500px" height="400px"/>
 					<br><br>
 
-					Approach 1- K-Means Clustering:<br>
-					The idea is that there might be certain environmental configurations which can be associated to the sensor value n some rudimentary range. For example, one configuration will be when most sensors to the right of the snake and the one at the head detect obstacles nearby, then the snake will turn left. So for configuration similar to this, snake should perform similarly. So we first cluster the sensor data (without heading direction), then perform statistical analysis on the heading direction of all data points within a point to see whether some corellation exists. <br><br>
+					<b> Control system for generating motion:</b><br><br>The snake robot uses serpenoid curve as its control scheme. This serpenoid curve is used to generate serpentine motion in th robot. The serpenoid curve was originally introduced by <a href="https://dl.acm.org/citation.cfm?id=562623">Hirose </a> to approximate the the serpentine motion of a snake. We use the modified serpenoid curve presented in [1].
+					<br><br>
+					The original mathematical model proposed by Hirose.
+					<img src="Pictures/cts-eqtn.png" alt="Continous equation"/>
+					<br>
+					The modified discretised version of serpenoid curve. This makes it possible to implement the serpenoid curve on a simulation as well as a real robot because both these applications require discrete time control systems.
+					<img src="Pictures/discrete-qtn.png" alt="Discrete time equation" />
+					<br><br>
+					Since our snake uses motors on each joint between two subsections, we use the relative angle between these subsections as our output rather than generating the x and y coordinates for all the subsections. This also eliminates the need for a global co-ordinate system for the x and y values.
+					
+					<br><br>
 
-					Approach 2- ARMA Model:<br>
-					One necessary condition of using ARMA process is that there should be some linear corellation between inputs and outputs. We were hoping that such a corellation might be present. But the corellation heatmap shown below suggests very low linear corellation between the two entities. This implies that using an ARMA model would yeild unhelpful results. So we had to discard in the initial stages itself.<br><br>
+					The control system takes parameters a,b and c as input and uses them to calculate alpha, beta and gamma. Alpha, beta, gamma and the joint number i are then used in the below equation to generate the relative angle phi.
+					<br><br>
+
+					The parameters a and b were experimentally chosen for our design of snake robot. The "c" value is the control parameter that governs the direction of motion of the robot. We will design predictive models in the following sections to predict "c" using the sensor data and the control paramters already available.
+					<br><br>
+					<img src="Pictures/paramters.png" alt="parameters"/>	
+					<br><br>
+					<img src="Pictures/angle-eqtn.png" alt="relative angle equation"/>	
+					<br><br>
+
+					<b> Designing the environment:</b><br><br>The environment of the snake robot is a horizontal plane with static coeff. of friction 0.5. We use several polygonal objects as obstacles to generate an obstacle map. These obstacles are randomly generated on intialisation of the simulation. This helps us in introducing diversity in our dataset.<br><br>
+					
+					<br><br>
+
+					<b> Path planning:</b><br><br>Given a map full of random obstacles, a path is autonomously planned using the following method:<br><br>
+
+					1. Watershed algorithm is applied on the image which segments the image in such a way that each enclosed boundary contains only one obstacle and the boundary is equidistant from the two closest obstacle. This works similar to voronoi diagrams. However this is a much more advanced algorithm than voronoi decomposition as voronoi can only segment a plane by drawing boundaries between points. However watershed algorithm can deal with obstacles of any shapes and size.
+					<br><br>2. One limitation of using watershed is that it will give a path even between two obstacles that are very close to each other. However making the snake move through such narrow spaces will lead to collision with the obstacles. To solve this, we first take a distance transform of the obstacle map and perform a pixelwise-and operation with the output of watershed algorithm. This gives us a an image in which the intensity of the path indicates its safeness, brighter path being safer.
+					<br><br>3. Next, we thresholded the image (threshold value chosen by experimentation). This gives us an image with some broken paths leading to dead ends. These loose ends are removed by pixelwise manipulation.
+					<br><br>4. Then, intersections of two paths are located using pixelwise calculation. Neighbors of all intersections are also found by traversing each path.
+					<br><br>
+					5. Once all junctions are located, all paths between two junctions are generated using a recursive graph theory algorithm.
+					<br><br>
+					The lines represent all the possible paths. The dots represent one possible path around the obstacles. 
+					<img src="Pictures/map.png" alt="paths" width="500px" height="400px"/>
+					<br><br>
+
+					<b>K-Means Clustering:</b><br>
+					We propose that there might be certain environmental configurations which can be associated to a particular sequence of sensor values. For example, a configuration where most sensors to the right of the snake and the one at the head detect obstacles nearby, then the snake will turn left. So, for a  configuration similar to this, the snake should perform in similar fashion. Thus, we first cluster the sensor data, and perform statistical analysis on the control paramters "c" and the sensor data of all data points to see whether some correlation exists. <br><br>
+
+					<b>Auto Regressive Moving Avegare (ARMA):</b><br>
+					One necessary condition of using ARMA process is that there should be some linear correlation between inputs and outputs. We postulated that such a correlation might be present. But the correlation heatmap shown below suggests very low linear correlation between the two entities. This implies that using an ARMA model would not be useful in our case. So we had to discard the ARMA model.<br><br>
+					The brightest blocks have the highest correlation while the dark blocks have low correlation.
 					<img src="Pictures/heatmap.jpg" alt="Heatmap" width="500px" height="400px"/></td<br><br>
 
-					Approach 3- LSTM Model:<br>
-					The dataset was then divided into training and testing set (70:30). We have used a scaled version of the entire dataset to prevent errors during training and to ease evaluation. We ued a scaled model of the dataset. The scaling is explained in the discusiion section. Next weused a single-cell LSTM model to train our data.<br><br>
+					<b>LSTM Model:</b><br>
+					From our observaton made during the simualtion of the snake robot, we found that the the "c" value or the heading direction depends upon the previous configuration of the robot and the sensor data of the present time-stamp. Thus, we try to design a recurrent neural network using an LSTM cell to predict the "c" value from the sensor values and control paramters of previous time-stamp. We use a single layer of 50 neurons, each nueron being a LSTM cell. <br>
+					<br>
+					Input feature vector: 17 sensor values and "c" value from previous time-stamp
+					<br>
+					
+					Output of network: "c" value for current time-stamp.<br><br>
 
-					The results of the two approaches that were viable are explained in the next section.
+					
+
+					The results are presented in the next section.
 					<!-- Stop edit here -->
 
 				</div>
@@ -191,7 +241,7 @@ Singapore, 2004 </a>
 					<div class="text">
 
 						<!-- Start edit here  -->
-						As we are approaching the snake-locomotion problem from a very different angel, we did not have any available dataset. Thus, we designed a simulated snake robot on Vrep (simulation software) to create our own data. We used the modified serpentine controller to control the motion of the robot by manualy tuning the paramters. The set has following division of data - <br>
+						The simulated snake robot was used to generate the dataset for training the LSTM model. The data has following features - <br>
 						<br>
 						1 head mounted sensor
 						<br>
@@ -200,7 +250,8 @@ Singapore, 2004 </a>
 						Heading direction value for current motion (c-value)
 						<br>
 						<br>
-						We had 59435 samples for each of the above feature. This data was generated using 45 real-time simulations performed in the snake-robot simulator.<br>
+						The dataset contains 59435 samples of data sequences, each of them being a vector of size 18. The first 17 values are the sensor values while last value is the "c" value for that time-stamp.<br><br>
+						As per the general rule of thumb, the dataset was then divided into training and testing set (70:30). We have used a scaled version of the entire dataset to prevent errors during training and ease evaluation. This data was generated using 45 real-time simulations performed in the snake-robot simulator.<br><br>
 						Generating trainig data in the snake-robot simulator
 						<img src="Pictures/training-simulation.png" alt="Simulated Design" width="600px" height="400px"/><br>
 						
@@ -213,9 +264,9 @@ Singapore, 2004 </a>
 					<div class="text">
 
 						<!-- Start edit here  -->
-						Results of K-means: <br>
-						We performed two clusterings with K as 10 and 25. For both clusterings, we did not observe any significant similarity between the heading directions of all the points in a particular clusters. Here are the images of statistical analysis performed on matlab. As you can observe, means are all very closed to zero. So even though variances of heading direction for most clusters is samall, these clustering models will fail to make sharp turnings.<br>
-						It is important to note that we modifies the dataset such that the frequency of occurence of values of heading direction was as uniform as possible so as to not have a skewed dataset.<br>
+						<b>Results of K-means:</b> <br>
+						We performed two clusterings with K as 10 and 25. For both clusterings, we did not observe any significant similarity between the "c" value of all the points in a particular clusters. The statistical analysis was performed on matlab. We have presented the results below. We observe that means are very close to zero. So, even though variances of "c" value for most clusters are small, these clustering models will fail to give sharp change in "c" value. This is desired in case of sharp turns.<br><br>
+						It is important to note that we modified the dataset such that the frequency of occurence of values of "c" value (heading direction) was as uniform as possible to prevent skewness in the dataset.<br>
 <table>
 						<tr>
 						<td>
@@ -225,20 +276,23 @@ Singapore, 2004 </a>
 						</table>
 						<br><br>
 
-						Results of LSTM: <br>
-						The dataset was then divided into training and testing set (70:30). We have used a scaled version of the entire dataset to prevent errors during training and to ease evaluation. The scaling was done as follows -<br><br>
+						<b>Results of LSTM:</b> <br>
+						We have used a scaled version of the entire dataset to prevent errors during training and ease evaluation. The scaling was done as follows -<br><br>
 						Sensor values (0,10) --> (0,1)
 						<br>
 						Heading direction (c-value) (-5,5) --> (-1,1)
 						<br><br>
-						We have used a single-cell LSTM model to train our data. The training results are -<br><br>
+						The training results are -<br><br>
 						<img src="Pictures/training-loss.png" alt="Simulated Design" width="700px" height="200px"/><br>
+						We have used a RMS measure to evaluate the training and testing error.<br>
+						<br>
+
 						Trainig Loss: 0.0019
 						<br>
 						Testing Loss: 0.0025
 						<br>
 						
-						The results suggest that the model has behaved pretty well for this problem.
+						The results suggest that the model behaves perfectly well for the given problem.
 						
 						<!-- Stop edit here -->
 
@@ -253,7 +307,7 @@ Singapore, 2004 </a>
 					<div class="text">
 
 						<!-- Start edit here  -->
-						In this work we presented a data-driven approach towards solving a navigation problem for a redundant system. We have successfully shown that it is possible to learn a control strategy by using the surrounding environment as an input. The LSTM based model is able to learn a navigation strategy and use it as control parameter of the serpentine controller.  
+						In this work we presented a data-driven approach towards solving a navigation problem for a redundant system. We have successfully shown that it is possible to learn a control strategy by using the surrounding environment as an input. The LSTM based model is able to learn a navigation strategy and use it with the serpenoid controller.  
 						<!-- Stop edit here -->
 
 					</div>
@@ -263,7 +317,7 @@ Singapore, 2004 </a>
 					<div class="text">
 
 						<!-- Start edit here  -->
-						We have observed that even though the model has shown greart predtion accuracy on the test data, it is not able to provide a proper navigation strategy for the simulated snake-robot. Thus. we aim to work further on this problem to correct the robot behaviour and incorporate goal-directed locomotion into the snake-robot. 
+						We have observed that even though the model has shown great prediction accuracy on the test data, it is not able to provide a proper navigation strategy for the simulated snake-robot. Thus, we aim to work further on this problem to correct the robot behaviour and incorporate goal-directed locomotion into the snake-robot. 
 						<!-- Stop edit here -->
 
 					</div>
